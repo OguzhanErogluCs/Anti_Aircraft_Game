@@ -18,6 +18,7 @@ public class Application extends JFrame {
         setTitle("Game");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }
 
     public static void main(String[] args) {
