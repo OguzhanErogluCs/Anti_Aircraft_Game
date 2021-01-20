@@ -6,21 +6,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import javax.swing.*;
 import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.swing.*;
+
 
 public class Board extends JPanel implements MouseListener {
 
     private int B_WIDTH;
     private int B_HEIGHT;
     private final int INITIAL_X = -40;
-    private int DELAY = 20;
+    private int DELAY = 40;
     private int score = 0;
     private Image aircraftImage;
     private Image background;
@@ -56,7 +57,7 @@ public class Board extends JPanel implements MouseListener {
         aircraftImage = aircraftImage.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH);
         ImageIcon ii_bullet = new ImageIcon("imgs/bullet.png");
         bullet = ii_bullet.getImage();
-        bullet = bullet.getScaledInstance(40, 40,  java.awt.Image.SCALE_SMOOTH);
+        bullet = bullet.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
 
     }
 
@@ -165,7 +166,6 @@ public class Board extends JPanel implements MouseListener {
 
         g.drawImage(background, 0, 0, null);
         g.drawImage(tower,B_WIDTH/2-300, (B_HEIGHT/2)+110, null);
-        //g.drawImage(bullet,B_WIDTH/2-210, (B_HEIGHT/2)+110, null);
         if (aircrafts != null){
             for(Aircraft aircraft : aircrafts){
                 g.drawImage(aircraftImage, aircraft.getX(), aircraft.getY(), this);
@@ -173,15 +173,15 @@ public class Board extends JPanel implements MouseListener {
         }
         if (bullets != null){
             List<Bullet> willBeRemovedB = new ArrayList<>();
-            for(Bullet bulet : bullets){
-                g.drawImage(bullet, bulet.getxPos(), bulet.getyPos(), this);
-                bulet.update(this);
-                if (bulet.getxPos()<0 || bulet.getyPos()<0 || bulet.getxPos()>B_WIDTH){
-                    willBeRemovedB.add(bulet);
+            for(Bullet b : bullets){
+                g.drawImage(bullet, b.getxPos(), b.getyPos(), this);
+                b.update(this);
+                if (b.getxPos()<0 || b.getyPos()<0 || b.getxPos()>B_WIDTH){
+                    willBeRemovedB.add(b);
                 }
             }
-            for (Bullet bulet : willBeRemovedB){
-                bullets.remove(bulet);
+            for (Bullet b : willBeRemovedB){
+                bullets.remove(b);
             }
 
         }

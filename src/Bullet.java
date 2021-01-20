@@ -4,8 +4,6 @@ public class Bullet {
     private int yPos;
     private int width;
     private int height;
-    private double xVelocity;
-    private double yVelocity;
 
     public Bullet(int xPos, int yPos, int width, int height){
         this.xPos = xPos;
