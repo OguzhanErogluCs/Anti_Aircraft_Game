@@ -1,5 +1,5 @@
 import java.awt.EventQueue;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Application extends JFrame {
 
@@ -9,8 +9,10 @@ public class Application extends JFrame {
     }
 
     private void initUI() {
+        Board board = new Board();
+        addMouseListener(board);
 
-        add(new Board());
+        add(board);
 
         setResizable(false);
         pack();
