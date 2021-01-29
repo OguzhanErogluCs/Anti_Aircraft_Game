@@ -20,6 +20,12 @@ public class Bullet {
 
     }
 
+    /**
+     * This method updated bullet position towards mouse icon.
+     * @param b This is game board
+     * @return Nothing.
+     */
+
     void update(final Board b){
         int x = b.getMouseX() - b.getWidth()/2;
         int y = -(b.getMouseY() - b.getHeight());

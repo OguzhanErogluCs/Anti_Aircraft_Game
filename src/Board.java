@@ -46,9 +46,19 @@ public class Board extends JPanel implements MouseListener {
         initBoard();
     }
 
+    /**
+     * This method is used to get currentPath.
+     * @return String This returns current path which program runs.
+     */
     private String getPath(){
         return System.getProperty("user.dir");
     }
+
+    /**
+     * This method loads images of background, tower, aircraft, bullet and scales them to needed width and height.
+     * @param path This is the current path which program runs.
+     * @return Nothing.
+     */
 
     private void loadImage(String path) {
 
@@ -65,6 +75,13 @@ public class Board extends JPanel implements MouseListener {
         bullet = bullet.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
 
     }
+
+    /**
+     * This method initializes the game board.
+     * Adds score table to board.
+     * Sets a timer to create random aircrafts regularly.
+     * @return Nothing.
+     */
 
     private void initBoard() {
 
@@ -110,7 +127,12 @@ public class Board extends JPanel implements MouseListener {
         });
         timer.start();
     }
-
+    /**
+     * This method checks whether there is a collision or not between each aircraft and bullet pairs.
+     * If there is a collision, it removes the bullet and update willBeRemoved list of aircraft.
+     * @param list This is the willBeRemoved list of aircraft
+     * @return List Returns updated willBeRemoved list of aircraft.
+     */
     public List<Aircraft> checkCollisions(List<Aircraft> list) {
         List<Bullet> willBeRemovedb = new ArrayList<>();
         for (Bullet b : bulletContainer.getBullets()) {
@@ -135,6 +157,13 @@ public class Board extends JPanel implements MouseListener {
         return list;
     }
 
+    /**
+     * This method draws all components.
+     * If three aircrafts did not pass the map, draw() function called,
+     * else drawGameOver()
+     * @return Nothing.
+     */
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -144,6 +173,11 @@ public class Board extends JPanel implements MouseListener {
             drawGameOver(g);
         }
     }
+
+    /**
+     * This method draws gameover screen and shows final score.
+     * @return Nothing.
+     */
 
     private void drawGameOver(Graphics g) {
 
@@ -156,6 +190,11 @@ public class Board extends JPanel implements MouseListener {
         g.drawString(msg, (B_WIDTH - fm.stringWidth(msg)) / 2,
                 B_HEIGHT / 2);
     }
+
+    /**
+     * This method draws regular game screen and shows current score.
+     * @return Nothing.
+     */
 
     private void draw(Graphics g) {
 
@@ -211,6 +250,11 @@ public class Board extends JPanel implements MouseListener {
     public void setTurretY(int turretY) {
         this.turretY = turretY;
     }
+
+    /**
+     * This method creates a bullet object when mouse clicked.
+     * @return Nothing.
+     */
 
     @Override
     public void mouseClicked(MouseEvent e) {
