@@ -32,13 +32,14 @@ public class Board extends JPanel implements MouseListener {
     private int mouseY;
     private int turretX;
     private int turretY;
-    private List<Aircraft> aircrafts = new ArrayList<>();
-    private List<Bullet> bullets = new ArrayList<>();
     private int lose = 0;
 
     JLabel l = new JLabel();
 
     Random random = new Random();
+
+    Aircraft aircraftContainer = new Aircraft();
+    Bullet bulletContainer = new Bullet();
 
     public Board() {
 
@@ -84,17 +85,15 @@ public class Board extends JPanel implements MouseListener {
         timer = new Timer(DELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int change = random.nextInt(110);
-                if (change == 7 && aircrafts.size() < 10){
-                    int randYLoc = random.nextInt(B_HEIGHT/3);
-                    int randMove = random.nextInt(10)+1;
-                    createAircraft(randYLoc, randMove);
-                }
-                if (aircrafts != null) {
+                int randomToCreate = random.nextInt(100);
+                int randYLoc = random.nextInt(B_HEIGHT/3);
+                int randMove = random.nextInt(10)+1;
+                aircraftContainer.createAircraft(randYLoc, randMove, INITIAL_X, randomToCreate);
+                if (aircraftContainer.getAircrafts() != null) {
 
                     List<Aircraft> willBeRemoved = new ArrayList<>();
 
-                    for (Aircraft aircraft : aircrafts) {
+                    for (Aircraft aircraft : aircraftContainer.getAircrafts()) {
                         int move = aircraft.getMove();
                         aircraft.setX(aircraft.getX() + move);
 
@@ -105,9 +104,7 @@ public class Board extends JPanel implements MouseListener {
                         willBeRemoved = checkCollisions(willBeRemoved);
                         repaint();
                     }
-                    for (Aircraft aircraft : willBeRemoved){
-                        aircrafts.remove(aircraft);
-                    }
+                    aircraftContainer.removeAircraft(willBeRemoved);
                 }
             }
         });
@@ -116,11 +113,11 @@ public class Board extends JPanel implements MouseListener {
 
     public List<Aircraft> checkCollisions(List<Aircraft> list) {
         List<Bullet> willBeRemovedb = new ArrayList<>();
-        for (Bullet b : bullets) {
+        for (Bullet b : bulletContainer.getBullets()) {
 
             Rectangle r1 = new Rectangle(b.getxPos(), b.getyPos(), b.getWidth(), b.getHeight());
 
-            for (Aircraft a : aircrafts) {
+            for (Aircraft a : aircraftContainer.getAircrafts()) {
 
                 Rectangle r2 = new Rectangle(a.getX(), a.getY(), 120, 120);
 
@@ -134,9 +131,7 @@ public class Board extends JPanel implements MouseListener {
                 }
             }
         }
-        for (Bullet b : willBeRemovedb){
-            bullets.remove(b);
-        }
+        bulletContainer.removeBullets(willBeRemovedb);
         return list;
     }
 
@@ -162,32 +157,25 @@ public class Board extends JPanel implements MouseListener {
                 B_HEIGHT / 2);
     }
 
-    private void createAircraft(int randYLoc, int randMove){
-        aircrafts.add(new Aircraft(randYLoc, INITIAL_X, randMove));
-        }
-
     private void draw(Graphics g) {
 
         g.drawImage(background, 0, 0, null);
         g.drawImage(tower,B_WIDTH/2-300, (B_HEIGHT/2)+110, null);
-        if (aircrafts != null){
-            for(Aircraft aircraft : aircrafts){
+        if (aircraftContainer.getAircrafts() != null){
+            for(Aircraft aircraft : aircraftContainer.getAircrafts()){
                 g.drawImage(aircraftImage, aircraft.getX(), aircraft.getY(), this);
             }
         }
-        if (bullets != null){
+        if (bulletContainer.getBullets() != null){
             List<Bullet> willBeRemovedB = new ArrayList<>();
-            for(Bullet b : bullets){
+            for(Bullet b : bulletContainer.getBullets()){
                 g.drawImage(bullet, b.getxPos(), b.getyPos(), this);
                 b.update(this);
                 if (b.getxPos()<0 || b.getyPos()<0 || b.getxPos()>B_WIDTH){
                     willBeRemovedB.add(b);
                 }
             }
-            for (Bullet b : willBeRemovedB){
-                bullets.remove(b);
-            }
-
+            bulletContainer.removeBullets(willBeRemovedB);
         }
         Toolkit.getDefaultToolkit().sync();
     }
@@ -226,9 +214,7 @@ public class Board extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Bullet playerBullet = new Bullet(turretX, turretY, 40, 40);
-        bullets.add(playerBullet);
-
+        bulletContainer.createBullet(turretX, turretY, 40, 40);
         mouseX = e.getX();
         mouseY = e.getY();
     }
