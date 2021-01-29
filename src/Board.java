@@ -45,17 +45,21 @@ public class Board extends JPanel implements MouseListener {
         initBoard();
     }
 
-    private void loadImage() {
+    private String getPath(){
+        return System.getProperty("user.dir");
+    }
 
-        ImageIcon ii_background = new ImageIcon("imgs/background.png");
+    private void loadImage(String path) {
+
+        ImageIcon ii_background = new ImageIcon(path+"/imgs/background.png");
         background = ii_background.getImage();
-        ImageIcon ii_tower = new ImageIcon("imgs/tower.png");
+        ImageIcon ii_tower = new ImageIcon(path+"/imgs/tower.png");
         tower = ii_tower.getImage();
         tower = tower.getScaledInstance(200, 200,  java.awt.Image.SCALE_SMOOTH);
-        ImageIcon ii_aircraft = new ImageIcon("imgs/aircraft.png");
+        ImageIcon ii_aircraft = new ImageIcon(path+"/imgs/aircraft.png");
         aircraftImage = ii_aircraft.getImage();
         aircraftImage = aircraftImage.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH);
-        ImageIcon ii_bullet = new ImageIcon("imgs/bullet.png");
+        ImageIcon ii_bullet = new ImageIcon(path+"/imgs/bullet.png");
         bullet = ii_bullet.getImage();
         bullet = bullet.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
 
@@ -63,7 +67,7 @@ public class Board extends JPanel implements MouseListener {
 
     private void initBoard() {
 
-        loadImage();
+        loadImage(getPath());
 
         B_WIDTH = background.getWidth(this);
         B_HEIGHT = background.getHeight(this);
@@ -82,7 +86,9 @@ public class Board extends JPanel implements MouseListener {
             public void actionPerformed(ActionEvent e) {
                 int change = random.nextInt(110);
                 if (change == 7 && aircrafts.size() < 10){
-                    createAircraft();
+                    int randYLoc = random.nextInt(B_HEIGHT/3);
+                    int randMove = random.nextInt(10)+1;
+                    createAircraft(randYLoc, randMove);
                 }
                 if (aircrafts != null) {
 
@@ -156,9 +162,7 @@ public class Board extends JPanel implements MouseListener {
                 B_HEIGHT / 2);
     }
 
-    private void createAircraft(){
-        int randYLoc = random.nextInt(B_HEIGHT/3);
-        int randMove = random.nextInt(10)+1;
+    private void createAircraft(int randYLoc, int randMove){
         aircrafts.add(new Aircraft(randYLoc, INITIAL_X, randMove));
         }
 
