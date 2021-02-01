@@ -6,7 +6,9 @@ public class Aircraft {
     private int y;
     private int x;
     private int move;
-    static private List<Aircraft> aircrafts = new ArrayList<>();
+    static private Boolean gameOver = false;
+    static private int toCountPassed = 0;
+    static protected List<Aircraft> aircrafts = new ArrayList<>();
 
 
     public Aircraft(int y, int x, int move){
@@ -62,4 +64,22 @@ public class Aircraft {
         this.move = move;
     }
 
+    public int getToCountPassed() {
+        return toCountPassed;
+    }
+
+    public static Boolean getGameOver() {
+        return gameOver;
+    }
+
+    public List<Aircraft> checkPassings(int B_WIDTH, List<Aircraft> willBeRemoved, Aircraft aircraft){
+        if (aircraft.getX() > B_WIDTH) {
+            willBeRemoved.add(aircraft);
+            toCountPassed++;
+        }
+        if (toCountPassed >= 3){
+            gameOver = true;
+        }
+        return willBeRemoved;
+    }
 }

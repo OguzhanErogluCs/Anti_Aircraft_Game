@@ -28,13 +28,11 @@ public class Board extends JPanel implements MouseListener {
     private Image tower;
     private Image bullet;
     private Timer timer;
-    private int mouseX;
-    private int mouseY;
+    private int mouseX = -1;
+    private int mouseY = -1;
     private int turretX;
     private int turretY;
-    private int lose = 0;
-
-    JLabel l = new JLabel();
+    private JLabel l = new JLabel();
 
     Random random = new Random();
 
@@ -50,7 +48,7 @@ public class Board extends JPanel implements MouseListener {
      * This method is used to get currentPath.
      * @return String This returns current path which program runs.
      */
-    private String getPath(){
+    protected String getPath(){
         return System.getProperty("user.dir");
     }
 
@@ -106,27 +104,29 @@ public class Board extends JPanel implements MouseListener {
                 int randYLoc = random.nextInt(B_HEIGHT/3);
                 int randMove = random.nextInt(10)+1;
                 aircraftContainer.createAircraft(randYLoc, randMove, INITIAL_X, randomToCreate);
-                if (aircraftContainer.getAircrafts() != null) {
-
-                    List<Aircraft> willBeRemoved = new ArrayList<>();
-
-                    for (Aircraft aircraft : aircraftContainer.getAircrafts()) {
-                        int move = aircraft.getMove();
-                        aircraft.setX(aircraft.getX() + move);
-
-                        if (aircraft.getX() > B_WIDTH) {
-                            willBeRemoved.add(aircraft);
-                            lose++;
-                        }
-                        willBeRemoved = checkCollisions(willBeRemoved);
-                        repaint();
-                    }
-                    aircraftContainer.removeAircraft(willBeRemoved);
-                }
+                updateAircrafts(aircraftContainer.getAircrafts());
             }
         });
         timer.start();
     }
+
+    protected void updateAircrafts(List<Aircraft> a){
+        if (a != null) {
+
+            List<Aircraft> willBeRemoved = new ArrayList<>();
+
+            for (Aircraft aircraft : a) {
+                int move = aircraft.getMove();
+                aircraft.setX(aircraft.getX() + move);
+
+                willBeRemoved = aircraftContainer.checkPassings(B_WIDTH, willBeRemoved, aircraft);
+                willBeRemoved = checkCollisions(willBeRemoved);
+                repaint();
+            }
+            aircraftContainer.removeAircraft(willBeRemoved);
+        }
+    }
+
     /**
      * This method checks whether there is a collision or not between each aircraft and bullet pairs.
      * If there is a collision, it removes the bullet and update willBeRemoved list of aircraft.
@@ -167,7 +167,7 @@ public class Board extends JPanel implements MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (lose<3){
+        if (!aircraftContainer.getGameOver()){
             draw(g);
         }else{
             drawGameOver(g);
@@ -219,6 +219,14 @@ public class Board extends JPanel implements MouseListener {
         Toolkit.getDefaultToolkit().sync();
     }
 
+    public JLabel getL() {
+        return l;
+    }
+
+    public void setL(JLabel l) {
+        this.l = l;
+    }
+
     public int getMouseX() {
         return mouseX;
     }
@@ -249,6 +257,22 @@ public class Board extends JPanel implements MouseListener {
 
     public void setTurretY(int turretY) {
         this.turretY = turretY;
+    }
+
+    public Image getAircraftImage() {
+        return aircraftImage;
+    }
+
+    public Image getTower() {
+        return tower;
+    }
+
+    public Image getBullet() {
+        return bullet;
+    }
+
+    public void setB_WIDTH(int b_WIDTH) {
+        B_WIDTH = b_WIDTH;
     }
 
     /**
